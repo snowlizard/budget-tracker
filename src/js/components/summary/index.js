@@ -1,3 +1,11 @@
-import Summary from './summary'
+import { connect } from 'react-redux';
+import Summary from './summary';
 
-export default Summary;
+const mapStoreToProps = (store) => {
+    return {
+        expenseItems: store.expense.lineItems,
+        incomeItems : store.income.lineItems
+    }
+}
+
+export default connect(mapStoreToProps)(Summary);

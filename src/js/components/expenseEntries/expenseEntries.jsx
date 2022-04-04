@@ -1,11 +1,40 @@
 import React from "react";
+import {
+    updateExpenseDescription,
+    updateExpenseAmount,
+    addExpense
+} from './expenseActions';
 
 export default class ExpenseEntries extends React.Component{
     constructor(props){
         super(props);
+
+        // binding
+        this.handleDescription = this.handleDescription.bind(this);
+        this.handleAmountInput = this.handleAmountInput.bind(this);
+        this.handleAddExpense  = this.handleAddExpense.bind(this);
+    }
+
+    handleDescription (event){
+        const { dispatch } = this.props;
+        const { value } = event.target;
+        dispatch(updateExpenseDescription(value));
+    }
+
+    handleAmountInput (event) {
+        const {dispatch} = this.props;
+        const {value} = event.target;
+        dispatch(updateExpenseAmount(value));
+    }
+
+    handleAddExpense (event){
+        event.preventDefault();
+        const { description, amount, dispatch } = this.props;
+        dispatch(addExpense(description, amount));
     }
 
     render(){
+        const { description, amount, lineItems } = this.props;
         return (
             <div className="card border-danger mb-3">
                 <div className="card-header text-white bg-danger">
@@ -15,18 +44,29 @@ export default class ExpenseEntries extends React.Component{
                     <form>
                         <div className="form-group">
                             <label htmlFor="expense-description">Description</label>
-                            <input id="expense-description" type="text" className="form-control" />
+                            <input id="expense-description"
+                                type="text" 
+                                className="form-control"
+                                value={ description }
+                                onChange={ this.handleDescription }
+                            />
                         </div>
 
                         <div className="form-group">
                             <label htmlFor="expense-amount">Amount</label>
                             <div className="input-group">
                                 <span className="input-group-addon">$</span>
-                                <input type="text" className="form-control" id="expense-amount" />
+                                <input type="text"
+                                    className="form-control"
+                                    id="expense-amount"
+                                    value={ amount }
+                                    onChange={ this.handleAmountInput }
+                                />
                             </div>
                         </div>
                         
-                        <button className="btn btn-danger col-12 mb-5">
+                        <button className="btn btn-danger col-12 mb-5"
+                            onClick={ this.handleAddExpense }>
                             + Add Expense
                         </button>
 
@@ -38,10 +78,14 @@ export default class ExpenseEntries extends React.Component{
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Rent</td>
-                                    <td>$1,500.00</td>
-                                </tr>
+                                {
+                                    lineItems.map( lineItem => (
+                                        <tr>
+                                            <td>{lineItem.description}</td>
+                                            <td>{lineItem.amount.toFixed(2)}</td>
+                                        </tr>
+                                    ))
+                                }
                             </tbody>
                         </table>
 

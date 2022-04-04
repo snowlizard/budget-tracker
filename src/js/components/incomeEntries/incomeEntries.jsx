@@ -1,11 +1,39 @@
 import React from "react";
+import {
+    updateIncomeDescription,
+    updateIncomeAmount,
+    addIncome
+} from './incomeActions';
 
 export default class IncomeEntries extends React.Component{
     constructor(props){
         super(props);
+
+        // binding
+        this.handleDescription = this.handleDescription.bind(this);
+        this.handleAmountInput = this.handleAmountInput.bind(this);
+        this.handleAddIncome  = this.handleAddIncome.bind(this);
     }
 
+    handleDescription (event){
+        const { dispatch } = this.props;
+        const { value } = event.target;
+        dispatch(updateIncomeDescription(value));
+    }
+
+    handleAmountInput (event) {
+        const {dispatch} = this.props;
+        const {value} = event.target;
+        dispatch(updateIncomeAmount(value));
+    }
+
+    handleAddIncome (event){
+        event.preventDefault();
+        const { description, amount, dispatch } = this.props;
+        dispatch(addIncome(description, amount));
+    }
     render(){
+        const { description, amount, lineItems } = this.props;
         return (
             <div className="card border-danger mb-3">
                 <div className="card-header text-white bg-danger">
@@ -15,18 +43,29 @@ export default class IncomeEntries extends React.Component{
                     <form>
                         <div className="form-group">
                             <label htmlFor="income-description">Description</label>
-                            <input id="icome-description" type="text" className="form-control" />
+                            <input id="income-description"
+                                type="text"
+                                className="form-control" 
+                                value={ description }
+                                onChange={ this.handleDescription }
+                            />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="icome-amount">Amount</label>
+                            <label htmlFor="income-amount">Amount</label>
                             <div className="input-group">
                                 <span className="input-group-addon">$</span>
-                                <input type="text" className="form-control" id="income-amount" />
+                                <input type="text"
+                                    className="form-control" 
+                                    id="income-amount"
+                                    value={ amount }
+                                    onChange={ this.handleAmountInput }
+                                />
                             </div>
                         </div>
                         
-                        <button className="btn btn-danger col-12 mb-5">
+                        <button className="btn btn-danger col-12 mb-5"
+                            onClick={ this.handleAddIncome }>
                             + Add Income
                         </button>
 
@@ -38,10 +77,14 @@ export default class IncomeEntries extends React.Component{
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Work</td>
-                                    <td>$1,500.00</td>
-                                </tr>
+                                {
+                                    lineItems.map( lineItem => (
+                                        <tr>
+                                            <td>{lineItem.description}</td>
+                                            <td>{lineItem.amount}</td>
+                                        </tr>
+                                    ))
+                                }
                             </tbody>
                         </table>
 

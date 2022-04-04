@@ -2,6 +2,7 @@ import React from 'react';
 import IncomeEntries from './components/incomeEntries';
 import ExportEntries from './components/expenseEntries';
 import Summary from './components/summary';
+import rootStore from './rootStore';
 
 export default class App extends React.Component {
   render() {
@@ -12,15 +13,15 @@ export default class App extends React.Component {
         </div>
         <div className="row">
           <div className="col-12 col-md-6 mb-4">
-            <IncomeEntries />
+            <IncomeEntries  store={rootStore}/>
           </div>
           <div className="col-12 col-md-6 mb-4">
-            <ExportEntries />
+            <ExportEntries store={rootStore}/>
           </div>
         </div>
         <div className="row justify-content-center">
           <div className="col-12 col-md-6">
-            <Summary />
+            <Summary store={rootStore}/>
           </div>
         </div>
       </div>
